@@ -1,0 +1,19 @@
+
+-- Creacion de base de datos 
+CREATE TABLE public.estudiantes
+(
+    id serial NOT NULL,
+    nombre character varying,
+    codigo integer,
+    email character varying,
+    CONSTRAINT estudiantes_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS public.estudiantes
+    OWNER to biwoqvym;
+
+
+-- Insertar registros a la base de datos
+INSERT INTO public.estudiantes(
+	nombre, codigo, email)
+	VALUES ('Jose Ernesto', 606192011, 'jose_ernesto@konradlorenz.edu.co');

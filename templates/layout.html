@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Conexion</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="/"></a>
+    </nav>
+  
+    <div class="container pt-4">
+      {% block body %}
+      {% endblock %}
+    </div>
+   
+<script>
+const btnDelete= document.querySelectorAll('.btn-delete');
+if(btnDelete) {
+  const btnArray = Array.from(btnDelete);
+  btnArray.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      if(!confirm('¿Estas seguro de querer eliminar el registro?')){
+        e.preventDefault();
+      }
+    });
+  })
+}
+
+  
+</script>
+  </body>
+</html>
