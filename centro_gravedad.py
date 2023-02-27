@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 import folium
 import statistics
@@ -6,35 +7,39 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 
 
-def metodo_centroide_con_mapa(data, Densidad):
+def convertir_df(data):
+    data = pd.DataFrame(data)
+    data.columns = ['id', 'id_usuario', 'cliente', 'latitud', 'longitud', 'distribucion']
+    return data
+
+def metodo_centroide_con_mapa(data):
     ## Asegurar el tipo de datos, solo enviar numericos
     # Usar en caso de tener la longitud y logitud
-    # Densidad : Nombre de la columna que tiene la densidad de ventas 
-    longs = data['Longitud']
-    lats = data['Latitud']
-    centro_gravedad = calcular_centro_gravedad(longs, lats, data, Densidad)
+    data = convertir_df(data)
+    longs = data['longitud']
+    lats = data['latitud']
+    centro_gravedad = calcular_centro_gravedad(longs, lats, data)
     localizacion = get_address_from_coordinates(centro_gravedad['longs'], centro_gravedad['lats'])
-    mapa = mapear(longs, lats, data, Densidad, centro_gravedad)
+    mapa = mapear(longs, lats, data, centro_gravedad)
     return centro_gravedad, localizacion, mapa
 
-def metodo_centroide_con_mapa_direccion(data, Densidad):
+def metodo_centroide_con_mapa_direccion(data):
     ## Usar en caso de tener solo la ubicacion y no las coordenadas
     ## El df debe contener una columna con el pais, con la ciudad y con el lugar
     data = get_coordinates_from_address(data)
     longs, lats = extraer_coordenates(data)
-    centro_gravedad = calcular_centro_gravedad(longs, lats, data, Densidad)
+    centro_gravedad = calcular_centro_gravedad(longs, lats, data)
     localizacion = get_address_from_coordinates(centro_gravedad['longs'], centro_gravedad['lats'])
-    mapa = mapear(longs, lats, data, Densidad, centro_gravedad)
+    mapa = mapear(longs, lats, data,centro_gravedad)
     return centro_gravedad, localizacion, mapa
         
-def calcular_centro_gravedad(longs, lats, data, Densidad):
+def calcular_centro_gravedad(longs, lats, data):
     # Series longs = Lista de las longitudes
     # Series lats = Lista de las latitudes
     # Data Frame data = Dataframe con los datos de la densidad, distribución, o peso, etc. 
-    # Densidad = Nombre de la columna donde esta el el peso distribución, etc
     centro_gravedad = {}
-    centro_gravedad['longs'] = np.dot(longs, data[Densidad]) / np.sum(data[Densidad])
-    centro_gravedad['lats'] = np.dot(lats, data[Densidad]) / np.sum(data[Densidad])
+    centro_gravedad['longs'] = np.dot(longs, data['distribucion']) / np.sum(data['distribucion'])
+    centro_gravedad['lats'] = np.dot(lats, data['distribucion']) / np.sum(data['distribucion'])
     return centro_gravedad
 
 def get_coordinates_from_address(data):
@@ -59,11 +64,10 @@ def get_address_from_coordinates(longitude, latitude):
     return location.address
 
 
-def mapear (longs, lats, data, Densidad, centro_gravedad):
+def mapear (longs, lats, data, centro_gravedad):
     # Series longs = Lista de las longitudes
     # Series lats = Lista de las latitudes
     # Data Frame data = Dataframe con los datos de la densidad, distribución, o peso, etc. 
-    # Densidad = Nombre de la columna donde esta el el peso distribución, etc
     # dict centro de gravedad = con las coordenadas objetivos 
     # {'longs': -74.07947858972396, 'lats': 4.626305037613849}
     mediaLong = statistics.mean(longs)
@@ -73,9 +77,9 @@ def mapear (longs, lats, data, Densidad, centro_gravedad):
     mapa = folium.Map(location=[mediaLat, mediaLong], zoom_start = 12)
 
     # Crear una capa de mapa de calor
-    mapa_calor = HeatMap( list(zip(lats, longs, data[Densidad])),
+    mapa_calor = HeatMap( list(zip(lats, longs, data['distribucion'])),
                     min_opacity=0.2,
-                    max_val=data[Densidad].max(),
+                    max_val=data['distribucion'].max(),
                     radius=50, 
                     blur=50, 
                     max_zoom=1)

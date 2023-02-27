@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import psycopg2 #pip install psycopg2 
 import psycopg2.extras
 from psycopg2 import Error
+from centro_gravedad import metodo_centroide_con_mapa, convertir_df
+import pandas as pd
  
 app = Flask(__name__)
 app.secret_key = "cairocoders-ednalan"
@@ -126,5 +128,12 @@ def delete_student(id):
     flash('Registro removido con exito')
     return redirect(url_for('Index'))
  
+@app.route('/calcular', methods = ['POST','GET'])
+def calcular(): 
+    centro_gravedad, localizacion, mapa = metodo_centroide_con_mapa(consulta())
+    print(centro_gravedad)
+
+
+    return render_template('centroide.html', centro_gravedad = centro_gravedad, localizacion = localizacion, mapa = mapa)
 if __name__ == "__main__":
     app.run(debug=True, port = 8500)
