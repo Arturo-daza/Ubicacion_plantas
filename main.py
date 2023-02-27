@@ -131,9 +131,12 @@ def delete_student(id):
 @app.route('/calcular', methods = ['POST','GET'])
 def calcular(): 
     centro_gravedad, localizacion, mapa = metodo_centroide_con_mapa(consulta())
-    print(centro_gravedad)
+    # set the iframe width and height
+    mapa.get_root().width = "800px"
+    mapa.get_root().height = "600px"
+    iframe = mapa.get_root()._repr_html_()
 
 
-    return render_template('centroide.html', centro_gravedad = centro_gravedad, localizacion = localizacion, mapa = mapa)
+    return render_template('centroide.html', centro_gravedad = centro_gravedad, localizacion = localizacion, iframe = iframe)
 if __name__ == "__main__":
     app.run(debug=True, port = 8500)
