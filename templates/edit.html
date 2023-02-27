@@ -3,18 +3,23 @@
   <div class="row">
     <div class="col-md-4 offset-md-4">
       <div class="card card-body">
-        <form action="/update/{{student.id}}" method="POST">
+        <form action="/update/{{centroide.id}}" method="POST">
           <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" value="{{student.nombre}}" class="form-control">
+            <label for="cliente">Cliente</label>
+            <input type="text" name="cliente" value="{{centroide.cliente}}" class="form-control">
           </div>
           <div class="form-group">
-            <label for="codigo">Codigo</label>
-            <input type="text" name="codigo" value="{{student.codigo}}" class="form-control">
+            <label for="Longitud">Latitud</label>
+            <input type="number" name="latitud" value="{{centroide.latitud}}" class="form-control" step = 0.000001>
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
-            <input type="text" name="email" value="{{student.email}}" class="form-control">
+            <label for="longitud">Longitud</label>
+            <input type="number" name="longitud" value="{{centroide.longitud}}" class="form-control" step = 0.000001>
+          </div>
+
+          <div class="form-group">
+            <label for="distribucion">Distribucion</label>
+            <input type="number" name="distribucion" value="{{centroide.distribucion}}" class="form-control">
           </div>
           <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">
