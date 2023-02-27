@@ -135,8 +135,11 @@ def calcular():
     mapa.get_root().width = "800px"
     mapa.get_root().height = "600px"
     iframe = mapa.get_root()._repr_html_()
-
-
-    return render_template('centroide.html', centro_gravedad = centro_gravedad, localizacion = localizacion, iframe = iframe)
+    context = {
+        'centro_gravedad': centro_gravedad, 
+        'localizacion': localizacion, 
+        'iframe':iframe
+    }
+    return render_template('centroide.html', **context)
 if __name__ == "__main__":
     app.run(debug=True, port = 8500)
