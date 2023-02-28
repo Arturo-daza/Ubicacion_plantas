@@ -88,8 +88,12 @@ def delete (id):
         
 @app.route('/')
 def Index():
+    return render_template('index.html')
+
+@app.route('/centroide')
+def centroide (): 
     list_users = consulta() 
-    return render_template('index.html', list_users = list_users)
+    return render_template('centro_gravedad.html', list_users = list_users)
  
 @app.route('/add_register', methods=['POST'])
 def add_register():
@@ -100,7 +104,7 @@ def add_register():
         distribucion = request.form['distribucion']
         insercion(cliente, latitud, longitud, distribucion)
         flash('Registro añadido con exito')
-        return redirect(url_for('Index'))
+        return redirect(url_for('centro_gravedad'))
  
 @app.route('/edit/<id>', methods = ['POST', 'GET'])
 def get_employee(id):
@@ -120,13 +124,13 @@ def update_register(id):
         
         update(cliente, latitud, longitud, distribucion, id)
         flash('Datos actualizados')
-        return redirect(url_for('Index'))
+        return redirect(url_for('centro_gravedad'))
  
 @app.route('/delete/<string:id>', methods = ['POST','GET'])
 def delete_student(id):
     delete(id)   
     flash('Registro removido con exito')
-    return redirect(url_for('Index'))
+    return redirect(url_for('centro_gravedad'))
  
 @app.route('/calcular', methods = ['POST','GET'])
 def calcular(): 
