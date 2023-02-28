@@ -6,6 +6,7 @@ from centro_gravedad import metodo_centroide_con_mapa, convertir_df
 import pandas as pd
  
 app = Flask(__name__)
+app.config['ENV'] = 'development'
 app.secret_key = "cairocoders-ednalan"
 
 ## Datos para establecer la conexión a la base de datos

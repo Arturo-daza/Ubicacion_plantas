@@ -73,3 +73,8 @@ section {
 div {
   font-weight: bold;
 }
+
+.center-image {
+  display: block;
+  margin: auto;
+  }
