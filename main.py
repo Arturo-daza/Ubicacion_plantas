@@ -104,7 +104,7 @@ def add_register():
         distribucion = request.form['distribucion']
         insercion(cliente, latitud, longitud, distribucion)
         flash('Registro añadido con exito')
-        return redirect(url_for('centro_gravedad'))
+        return redirect(url_for('centroide'))
  
 @app.route('/edit/<id>', methods = ['POST', 'GET'])
 def get_employee(id):
@@ -124,13 +124,13 @@ def update_register(id):
         
         update(cliente, latitud, longitud, distribucion, id)
         flash('Datos actualizados')
-        return redirect(url_for('centro_gravedad'))
+        return redirect(url_for('centroide'))
  
 @app.route('/delete/<string:id>', methods = ['POST','GET'])
 def delete_student(id):
     delete(id)   
     flash('Registro removido con exito')
-    return redirect(url_for('centro_gravedad'))
+    return redirect(url_for('centroide'))
  
 @app.route('/calcular', methods = ['POST','GET'])
 def calcular(): 
