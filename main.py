@@ -4,6 +4,7 @@ import psycopg2.extras
 from psycopg2 import Error
 from centro_gravedad import metodo_centroide_con_mapa, convertir_df
 from distancia_rectangular import metodo_rectangular_mapa
+from ubicacion import metodo_ubicacion_mapa
 import pandas as pd
  
 app = Flask(__name__)
@@ -360,19 +361,6 @@ def update_register_u(id):
         return redirect(url_for('ubicacion'))
 
 
-@app.route('/calcular_ubicacion', methods = ['POST','GET'])
-def calcular_ubicacion(): 
-    rectangular, localizacion, mapa = metodo_rectangular_mapa(consulta_r())
-    # set the iframe width and height
-    mapa.get_root().width = "800px"
-    mapa.get_root().height = "600px"
-    iframe = mapa.get_root()._repr_html_()
-    context = {
-        'rectangular': rectangular, 
-        'localizacion': localizacion, 
-        'iframe':iframe
-    }
-    return render_template('calculo_rectangular.html', **context)
 
 @app.route('/delete_u/<string:id>', methods = ['POST','GET'])
 def delete_register_u(id):
@@ -391,6 +379,23 @@ def subir_csv():
             for index, row in df.iterrows():
                 u_insercion(row['cliente'], row['latitud'], row['longitud'], row['carga'], row['costo'])
         return redirect(url_for('ubicacion'))
+
+
+@app.route('/calcular_ubicacion', methods = ['POST','GET'])
+def calcular_ubicacion(): 
+    resultado, localizacion_factible, localizacion_optimo, mapa = metodo_ubicacion_mapa(u_consulta())
+    # set the iframe width and height
+    mapa.get_root().width = "800px"
+    mapa.get_root().height = "600px"
+    iframe = mapa.get_root()._repr_html_()
+    context = {
+        'resultado_factible': resultado['Factible'], 
+        'resultado_optimo': resultado['Optimo'], 
+        'localizacion_factible': localizacion_factible, 
+        'localizacion_optimo': localizacion_optimo, 
+        'iframe':iframe
+    }
+    return render_template('calculo_ubicacion.html', **context)
 
 if __name__ == "__main__":
     app.run(debug=True, port = 8500)
