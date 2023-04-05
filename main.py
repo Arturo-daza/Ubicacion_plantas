@@ -110,18 +110,18 @@ def get_id_r(id):
     cierre_conexion(con) 
     return data 
 
-def insercion_r (cliente, latitud, longitud, cantidad_servicio, valor) :
+def insercion_r (cliente, latitud, longitud, costo_servicio, costo) :
 
   con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
   cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-  sql = f"INSERT INTO rectangular (cliente, latitud, longitud, cantidad_servicios, valor) VALUES('{cliente}','{latitud}','{longitud}', '{cantidad_servicio}', '{valor}')"
+  sql = f"INSERT INTO rectangular (cliente, latitud, longitud, carga, costo) VALUES('{cliente}','{latitud}','{longitud}', '{costo_servicio}', '{costo}')"
   cursor.execute(sql)
   #Comfirma los cambios en la base de datos
   con.commit() 
   cierre_conexion(con) 
   print("Registro ingresado satisfactoriamente")   
 
-def update_r (cliente, latitud, longitud, cantidad_servicio, valor, id) :  
+def update_r (cliente, latitud, longitud, costo_servicio, costo, id) :  
     con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
     cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute("""
@@ -129,10 +129,10 @@ def update_r (cliente, latitud, longitud, cantidad_servicio, valor, id) :
         SET cliente = %s,
             latitud = %s,
             longitud = %s,
-            cantidad_servicios = %s,
-            valor = %s
+            carga = %s,
+            costo = %s
         WHERE id = %s
-    """, (cliente, latitud, longitud, cantidad_servicio, valor,  id))
+    """, (cliente, latitud, longitud, costo_servicio, costo,  id))
     con.commit()
     cierre_conexion(con)
  
@@ -140,6 +140,62 @@ def delete_r (id):
         con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
         cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute('DELETE FROM rectangular  WHERE id = {0}'.format(id))
+        con.commit()
+        cierre_conexion(con)
+        
+# Ubicacion general
+
+def u_consulta () :  
+  #Consulta de datos 
+    resultado = None
+    try:
+        con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute('SELECT * FROM ubicacion')
+        resultado = cursor.fetchall()
+        cierre_conexion(con)        
+    except Error as e:
+        print(f'Se ha presentado un error al consultar:{e}')
+    return resultado
+
+def u_get_id(id):
+    con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
+    cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute('SELECT * FROM ubicacion WHERE id = %s', (id))
+    data = cursor.fetchall()
+    cierre_conexion(con) 
+    return data 
+
+def u_insercion (cliente, latitud, longitud, carga, costo) :
+
+  con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
+  cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+  sql = f"INSERT INTO ubicacion(cliente, latitud, longitud, carga, costo) VALUES('{cliente}','{latitud}','{longitud}', '{carga}', '{costo}')"
+  cursor.execute(sql)
+  #Comfirma los cambios en la base de datos
+  con.commit() 
+  cierre_conexion(con) 
+  print("Registro ingresado satisfactoriamente")   
+
+def u_update (cliente, latitud, longitud, carga, costo, id) :  
+    con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
+    cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute("""
+        UPDATE ubicacion
+        SET cliente = %s,
+            latitud = %s,
+            longitud = %s,
+            carga = %s, 
+            costo = %s
+        WHERE id = %s
+    """, (cliente, latitud, longitud, carga, costo, id))
+    con.commit()
+    cierre_conexion(con)
+ 
+def u_delete (id):
+        con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
+        cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute('DELETE FROM ubicacion WHERE id = {0}'.format(id))
         con.commit()
         cierre_conexion(con)
         
@@ -214,16 +270,15 @@ def add_register_r():
         cliente = request.form['cliente']
         latitud = request.form['latitud']
         longitud = request.form['longitud']
-        cantidad_servicios = request.form['cantidad_servicios']
-        valor = request.form['valor/servicio']
-        insercion_r(cliente, latitud, longitud, cantidad_servicios, valor)
+        carga = request.form['carga']
+        costo = request.form['costo']
+        u_insercion(cliente, latitud, longitud, carga, costo)
         flash('Registro añadido con exito')
         return redirect(url_for('rectangular'))
 
 @app.route('/edit_r/<id>', methods = ['POST', 'GET'])
 def get_employee_r(id):
     rectangular = get_id_r(id)
-    print(rectangular[0])
     return render_template('edit_rectangular.html', rectangular = rectangular[0])
 
 @app.route('/update_r/<id>', methods=['POST'])
@@ -232,10 +287,10 @@ def update_register_r(id):
         cliente = request.form['cliente']
         latitud = request.form['latitud']
         longitud = request.form['longitud']
-        cantidad_servicios = request.form['cantidad_servicios']
-        valor = request.form['valor']
+        carga = request.form['carga']
+        costo = request.form['costo']
         
-        update_r(cliente, latitud, longitud, cantidad_servicios, valor,  id)
+        update_r(cliente, latitud, longitud, carga, costo,  id)
         flash('Datos actualizados')
         return redirect(url_for('rectangular'))
 
@@ -259,5 +314,73 @@ def delete_register_r(id):
     delete_r(id)   
     flash('Registro removido con exito')
     return redirect(url_for('rectangular'))
+
+@app.route('/ubicacion')
+def ubicacion (): 
+    list_users = u_consulta() 
+    return render_template('ubicacion.html', list_users = list_users)
+
+@app.route('/add_register_u', methods=['POST'])
+def add_register_u():
+    if request.method == 'POST':
+        cliente = request.form['cliente']
+        latitud = request.form['latitud']
+        longitud = request.form['longitud']
+        carga = request.form['carga']
+        costo = request.form['costo']
+        u_insercion(cliente, latitud, longitud, carga, costo)
+        flash('Registro añadido con exito')
+        return redirect(url_for('ubicacion'))
+
+@app.route('/edit_u/<id>', methods = ['POST', 'GET'])
+def get_employee_u(id):
+    ubicacion = u_get_id(id)
+    return render_template('edit_ubicacion.html', ubicacion = ubicacion[0])
+
+@app.route('/update_u/<id>', methods=['POST'])
+def update_register_u(id):
+    if request.method == 'POST':
+        cliente = request.form['cliente']
+        latitud = request.form['latitud']
+        longitud = request.form['longitud']
+        carga = request.form['carga']
+        costo = request.form['costo']
+        
+        update_r(cliente, latitud, longitud, carga, costo,  id)
+        flash('Datos actualizados')
+        return redirect(url_for('ubicacion'))
+
+
+@app.route('/calcular_ubicacion', methods = ['POST','GET'])
+def calcular_ubicacion(): 
+    rectangular, localizacion, mapa = metodo_rectangular_mapa(consulta_r())
+    # set the iframe width and height
+    mapa.get_root().width = "800px"
+    mapa.get_root().height = "600px"
+    iframe = mapa.get_root()._repr_html_()
+    context = {
+        'rectangular': rectangular, 
+        'localizacion': localizacion, 
+        'iframe':iframe
+    }
+    return render_template('calculo_rectangular.html', **context)
+
+@app.route('/delete_u/<string:id>', methods = ['POST','GET'])
+def delete_register_u(id):
+    u_delete(id)   
+    flash('Registro removido con exito')
+    return redirect(url_for('ubicacion'))
+
+@app.route('/subir_csv', methods=['POST'])
+def subir_csv():
+    import io
+    if request.method == 'POST':
+        archivo = request.files['archivo_csv']
+        if archivo: 
+            df = pd.read_csv(io.StringIO(archivo.read().decode('utf-8')), sep=";")
+            for index, row in df.iterrows():
+                u_insercion(row['cliente'], row['latitud'], row['longitud'], row['carga'], row['costo'])
+        return redirect(url_for('ubicacion'))
+
 if __name__ == "__main__":
     app.run(debug=True, port = 8500)
