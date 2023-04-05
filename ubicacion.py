@@ -81,10 +81,12 @@ def mapear (longs, lats, data, factible, optimo):
     folium.Marker([optimo['X'], optimo['Y']], popup="Punto optimo", tooltip = tooltip).add_to(mapa)
     
     # Agregar una línea entre los puntos
+    distancia_km = calcular_distancia(factible['X'], factible['Y'], optimo['X'], optimo['Y'])
     folium.PolyLine(
         locations=[[factible['X'], factible['Y']], [optimo['X'], optimo['Y']]],
         color='blue',
-        weight=5
+        weight=5, 
+        tooltip=f"Distancia: {distancia_km:.2f} km"
     ).add_to(mapa)
 
     # Adherimos la capa de mapa de calor al mapa principal
