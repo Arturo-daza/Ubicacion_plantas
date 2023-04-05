@@ -143,6 +143,15 @@ def delete_r (id):
         con.commit()
         cierre_conexion(con)
         
+        
+# Truncar tabla
+def truncar(tabla):
+    con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
+    cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute(f'TRUNCATE TABLE {tabla}')
+    con.commit()
+    cierre_conexion(con)
+    
 # Ubicacion general
 
 def u_consulta () :  
@@ -377,7 +386,8 @@ def subir_csv():
     if request.method == 'POST':
         archivo = request.files['archivo_csv']
         if archivo: 
-            df = pd.read_csv(io.StringIO(archivo.read().decode('utf-8')), sep=";")
+            df = pd.read_csv(io.StringIO(archivo.read().decode('utf-8')), sep=";", decimal=",")
+            truncar('ubicacion')
             for index, row in df.iterrows():
                 u_insercion(row['cliente'], row['latitud'], row['longitud'], row['carga'], row['costo'])
         return redirect(url_for('ubicacion'))
