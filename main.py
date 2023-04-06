@@ -5,6 +5,8 @@ from psycopg2 import Error
 from centro_gravedad import metodo_centroide_con_mapa, convertir_df
 from distancia_rectangular import metodo_rectangular_mapa
 from ubicacion import metodo_ubicacion_mapa
+
+from objeto import UbicacionPlanta as up
 import pandas as pd
  
 app = Flask(__name__)
@@ -224,8 +226,8 @@ def add_register():
         cliente = request.form['cliente']
         latitud = request.form['latitud']
         longitud = request.form['longitud']
-        distribucion = request.form['distribucion']
-        insercion(cliente, latitud, longitud, distribucion)
+        carga = request.form['carga']
+        insercion(cliente, latitud, longitud, carga)
         flash('Registro añadido con exito')
         return redirect(url_for('centroide'))
  
@@ -243,7 +245,7 @@ def update_register(id):
         cliente = request.form['cliente']
         latitud = request.form['latitud']
         longitud = request.form['longitud']
-        distribucion = request.form['distribucion']
+        distribucion = request.form['carga']
         
         update(cliente, latitud, longitud, distribucion, id)
         flash('Datos actualizados')
@@ -257,14 +259,19 @@ def delete_student(id):
  
 @app.route('/calcular', methods = ['POST','GET'])
 def calcular(): 
-    centro_gravedad, localizacion, mapa = metodo_centroide_con_mapa(consulta())
+    
+    centro_gravedad = up(consulta())
+    mapa = centro_gravedad.metodo_centroide_mapa()
+    print(mapa)
+    print(centro_gravedad.centro_gravedad)
+    # centro_gravedad, localizacion, mapa = metodo_centroide_con_mapa(consulta())
     # set the iframe width and height
     mapa.get_root().width = "800px"
     mapa.get_root().height = "600px"
     iframe = mapa.get_root()._repr_html_()
     context = {
-        'centro_gravedad': centro_gravedad, 
-        'localizacion': localizacion, 
+        'centro_gravedad': centro_gravedad.centro_gravedad, 
+        'localizacion': centro_gravedad.localizacion_centro_gravedad, 
         'iframe':iframe
     }
     return render_template('centroide.html', **context)

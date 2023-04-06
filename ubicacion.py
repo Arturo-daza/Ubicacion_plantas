@@ -14,7 +14,6 @@ def convertir_df(data):
     data.columns = ['id', 'cliente', 'latitud', 'longitud', 'carga', 'costo']
     lista= data.columns.to_list()
     del lista[0:2]
-
     for i in lista: 
         data[i]= data[i].astype(float)
     return data
