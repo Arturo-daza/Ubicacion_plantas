@@ -2,35 +2,63 @@
 {% block body %}
 <div class="container" style="display: flex; flex-direction: column; text-align: center; align-items: center">
     <div class="row">
-        <h3>Calculo de ubicacion</h3>
+        <h3>Calculo de ubicacion por diferentes metodos</h3>
     </div>
     <div>
-
         <table id="example" class="table table-striped table-bordered" style="width:100%">
-            <thead class="thead-dark">
-                <tr>
-                    <td>Cliente</td>
-                    <td>Latitud</td>
-                    <td>Longitud</td>
-                    <td>Ubicacion</td>
-
-                </tr>
+            <thead>
+              <tr>
+                <th style="text-align: center"><strong>Método</strong></th>
+                <th><strong>Cliente</strong></th>
+                <th><strong>Latitud</strong></th>
+                <th><strong>Longitud</strong></th>
+                <th><strong>Ubicación</strong></th>
+                <th><strong>Icon</strong></th>
+              </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Punto Factible</td>
-                    <td>{{resultado_factible.get('X')}}</td>
-                    <td>{{resultado_factible.get('Y')}}</td>
-                    <td>{{localizacion_factible}}</td>
-                </tr>
-                <tr>
-                    <td>Punto Optimo</td>
-                    <td>{{resultado_optimo.get('X')}}</td>
-                    <td>{{resultado_optimo.get('Y')}}</td>
-                    <td>{{localizacion_optimo}}</td>
-                </tr>
+              <tr>
+                <td>Distancia euclidea</td>
+                <td>Punto Factible</td>
+                <td>{{resultado_factible.get('X')|round(6)}}</td>
+                <td>{{resultado_factible.get('Y')|round(6)}}</td>
+                <td>{{localizacion_factible}}</td>
+                <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-fire" viewBox="0 0 16 16">
+                    <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z"/>
+                  </svg></td>
+              </tr>
+              <tr>
+                <td>Distancia euclidea</td>
+                <td>Punto Optimo</td>
+                <td>{{resultado_optimo.get('X')|round(6)}}</td>
+                <td>{{resultado_optimo.get('Y')|round(6)}}</td>
+                <td>{{localizacion_optimo}}</td>
+                <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-fire" viewBox="0 0 16 16">
+                    <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z"/>
+                  </svg></td>
+              </tr>
+              <tr>
+                <td>Distancia rectangular</td>
+                <td>Punto factible</td>
+                <td>{{rectangular.get('lats')|round(6)}}</td>
+                <td>{{rectangular.get('longs')|round(6)}}</td>
+                <td>{{localizacion_rectangular}}</td>
+                <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-pin-angle" viewBox="0 0 16 16">
+                    <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146zm.122 2.112v-.002.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a4.507 4.507 0 0 0-.288-.076 4.922 4.922 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a4.924 4.924 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034.114 0 .23-.011.343-.04L9.927 2.028c-.029.113-.04.23-.04.343a1.779 1.779 0 0 0 .062.46z"/>
+                  </svg></td>
+              </tr>
+              <tr>
+                <td>Centro de gravedad</td>
+                <td>Punto factible</td>
+                <td>{{centro_gravedad.get('lats')|round(6)}}</td>
+                <td>{{centro_gravedad.get('longs')|round(6)}}</td>
+                <td>{{localizacion_centro_gravedad}}</td>
+                <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-hand-index-fill" viewBox="0 0 16 16">
+                    <path d="M8.5 4.466V1.75a1.75 1.75 0 1 0-3.5 0v5.34l-1.2.24a1.5 1.5 0 0 0-1.196 1.636l.345 3.106a2.5 2.5 0 0 0 .405 1.11l1.433 2.15A1.5 1.5 0 0 0 6.035 16h6.385a1.5 1.5 0 0 0 1.302-.756l1.395-2.441a3.5 3.5 0 0 0 .444-1.389l.271-2.715a2 2 0 0 0-1.99-2.199h-.581a5.114 5.114 0 0 0-.195-.248c-.191-.229-.51-.568-.88-.716-.364-.146-.846-.132-1.158-.108l-.132.012a1.26 1.26 0 0 0-.56-.642 2.632 2.632 0 0 0-.738-.288c-.31-.062-.739-.058-1.05-.046l-.048.002z"/>
+                  </svg></span></td>
+              </tr>
             </tbody>
-        </table>
+          </table>
 
     </div>
     <h3>Mapa interactivo de calor</h3>

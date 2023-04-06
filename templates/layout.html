@@ -6,6 +6,7 @@
     <title>Conexion</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
         id="bootstrap-css">
+
     <link rel="stylesheet" href={{ url_for('static', filename='css/style.css') }}>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -34,16 +35,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto"></ul>
             <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href={{ url_for('centroide') }} style="font-size: 18px;">Centro de gravedad</a>
-                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('rectangular') }}" style="font-size: 18px;">Distancia Rectangular</a>
+                    <a class="nav-link" href="{{ url_for('ubicacion') }}" style="font-size: 18px;">Realizar calculo</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('ubicacion') }}" style="font-size: 18px;">Distancia Euclídea</a>
-                </li>
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 18px;">
                         Otros
@@ -58,7 +53,7 @@
                         <a class="dropdown-item" href="#">Calificación de Factores</a>
                         <a class="dropdown-item" href="#">Método de Brown and Gibson</a>
                     </div>
-                </li>
+                </li> -->
             </ul>
         </div>
     </nav>

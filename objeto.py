@@ -78,19 +78,32 @@ class UbicacionPlanta:
         self.localizacion_euclideana_factible = get_address_from_coordinates(self.euclideana['Factible']['Y'], self.euclideana['Factible']['X'])
         self.localizacion_euclideana_optima = get_address_from_coordinates(self.euclideana['Optimo']['Y'], self.euclideana['Optimo']['X'])
         mapa = self.mapear("euclideano")
-        mapa
+        return mapa
     
+    def metodos_unificados_mapa(self):
+        self.calcular_centro_gravedad()
+        self.calcular_metodo_rectangular()
+        self.distancia_euclideana()
+        self.localizacion_centro_gravedad = get_address_from_coordinates(self.centro_gravedad['longs'], self.centro_gravedad['lats'])
+        self.localizacion_rectangular = get_address_from_coordinates(self.rectangular['longs'], self.rectangular['lats'])
+        self.localizacion_euclideana_factible = get_address_from_coordinates(self.euclideana['Factible']['Y'], self.euclideana['Factible']['X'])
+        self.localizacion_euclideana_optima = get_address_from_coordinates(self.euclideana['Optimo']['Y'], self.euclideana['Optimo']['X'])
+        mapa = self.mapear("todo")
+        return mapa
+        
+        
     def mapear (self, metodo):
         # Series longs = Lista de las longitudes
         # Series lats = Lista de las latitudes
         # Data Frame data = Dataframe con los datos de la densidad, distribución, o peso, etc. 
         # dict centro de gravedad = con las coordenadas objetivos 
         # {'longs': -74.07947858972396, 'lats': 4.626305037613849}
+        # https://getbootstrap.com/docs/3.3/components/ para los iconos
         mediaLong = statistics.mean(self.longs)
         mediaLat = statistics.mean(self.lats)
 
         # Crear un objeto de mapa base Map()
-        mapa = folium.Map(location=[mediaLat, mediaLong], zoom_start = 12)
+        mapa = folium.Map(location=[mediaLat, mediaLong], zoom_start = 5)
 
         # Crear una capa de mapa de calor
         mapa_calor = HeatMap( list(zip(self.lats, self.longs, self.data['carga'])),
@@ -107,7 +120,7 @@ class UbicacionPlanta:
         elif metodo == "rectangular":
             tooltip = 'Metodo rectangular'
             folium.Marker([self.rectangular['lats'], self.rectangular['longs']], popup="Metodo rectangular", tooltip = tooltip).add_to(mapa)
-        else: 
+        elif metodo=="euclideano": 
             longs=[]
             lats=[]
             nombre=["Punto factible", "Punto optimo"]
@@ -115,21 +128,57 @@ class UbicacionPlanta:
                 longs.append(i["X"])
                 lats.append(i["Y"])
             
-            for i in range(len(2)):
-                tooltip = nombre[0]
+            for i in range(2):
+                tooltip = nombre[i]
                 folium.Marker(
-                    [longs[0], lats[0]], 
+                    [longs[i], lats[i]], 
                     tooltip = tooltip, 
                     icon=folium.Icon(color="red", icon="info-sign")
                 ).add_to(mapa)
             distancia_km = calcular_distancia(longs[0], lats[0], longs[1], lats[1])
             folium.PolyLine(
                 locations=[[longs[0], lats[0]], [longs[1], lats[1]]],
-                color='gray',
+                color='red',
                 weight=5, 
                 tooltip=f"Distancia: {distancia_km:.2f} km"
             ).add_to(mapa)
-                
+        else: 
+            tooltip = 'Centro de gravedad'
+            folium.Marker([self.centro_gravedad['lats'],
+                           self.centro_gravedad['longs']], 
+                           popup="Centro de gravedad", 
+                           tooltip = tooltip,
+                           icon=folium.Icon(color="green", icon="glyphicon glyphicon-hand-down")
+                ).add_to(mapa)
+            tooltip = 'Metodo rectangular'
+            folium.Marker([self.rectangular['lats'], 
+                           self.rectangular['longs']], 
+                          popup="Metodo rectangular", 
+                          tooltip = tooltip, 
+                          icon=folium.Icon(color="blue", icon="glyphicon glyphicon-pushpin")
+                ).add_to(mapa)
+            longs=[]
+            lats=[]
+            nombre=["Punto factible", "Punto optimo"]
+            for i in self.euclideana.values():
+                longs.append(i["X"])
+                lats.append(i["Y"])
+            
+            for i in range(2):
+                tooltip = nombre[i]
+                folium.Marker(
+                    [longs[i], lats[i]], 
+                    tooltip = tooltip, 
+                    icon=folium.Icon(color="red", icon="glyphicon glyphicon-fire")
+                ).add_to(mapa)
+            distancia_km = calcular_distancia(longs[0], lats[0], longs[1], lats[1])
+            folium.PolyLine(
+                locations=[[longs[0], lats[0]], [longs[1], lats[1]]],
+                color='red',
+                weight=5, 
+                tooltip=f"Distancia: {distancia_km:.2f} km"
+            ).add_to(mapa)
+            
         # Adherimos la capa de mapa de calor al mapa principal
         mapa_calor.add_to(mapa)
         return mapa       
