@@ -78,3 +78,9 @@ div {
   display: block;
   margin: auto;
   }
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}

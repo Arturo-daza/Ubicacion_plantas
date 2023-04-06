@@ -109,8 +109,8 @@ def Index():
 
 @app.route('/ubicacion')
 def ubicacion (): 
-    list_users = consulta() 
-    return render_template('ubicacion.html', list_users = list_users)
+    puntos = consulta() 
+    return render_template('ubicacion.html', puntos = puntos)
 
 @app.route('/add_register_u', methods=['POST'])
 def add_register_u():
@@ -165,15 +165,16 @@ def subir_csv():
 
 @app.route('/calcular_ubicacion', methods = ['POST','GET'])
 def calcular_ubicacion(): 
-    
+    puntos = consulta() 
     ubicacionPlanta= up(consulta())
     mapa = ubicacionPlanta.metodos_unificados_mapa()
     resultado = ubicacionPlanta.euclideana
         # set the iframe width and height
-    mapa.get_root().width = "800px"
+    mapa.get_root().width = "1000px"
     mapa.get_root().height = "600px"
     iframe = mapa.get_root()._repr_html_()
     context = {
+        'puntos': puntos,
         'resultado_factible': resultado['Factible'], 
         'resultado_optimo': resultado['Optimo'], 
         'rectangular': ubicacionPlanta.rectangular, 
@@ -184,7 +185,7 @@ def calcular_ubicacion():
         'localizacion_centro_gravedad': ubicacionPlanta.localizacion_centro_gravedad, 
         'iframe':iframe
     }
-    return render_template('calculo_ubicacion.html', **context)
+    return render_template('ubicacion.html', **context)
 
 if __name__ == "__main__":
     app.run(debug=True, port = 8500)

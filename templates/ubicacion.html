@@ -6,7 +6,7 @@ Ubicacion
 <div class="container mb-2">
     <div class="row">
         <div class="mx-auto mb-3 mt-2">
-            <h3 style="font-weight: bold;">Ubicacion Metodo rectangular y euclideano</h3>
+            <h3 style="font-weight: bold;">Ubicacion Por diferentes metodos</h3>
         </div>
     </div>
     <div class="container">
@@ -14,7 +14,8 @@ Ubicacion
             <div class="col-md-6 offset-md-3 mt-2">
                 <form method="POST" action="{{ url_for('subir_csv') }}" enctype="multipart/form-data">
                     <div class="tooltip-description">
-                        <p>Descarga la siguiente plantilla y subela si quieres subir tus datos desde el computador <a href="{{ url_for('static', filename='ejemplo.csv') }}" download>Plantilla</a>
+                        <p>Descarga la siguiente plantilla y subela si quieres subir tus datos desde el computador <a
+                                href="{{ url_for('static', filename='ejemplo.csv') }}" download>Plantilla</a>
                         </p>
                     </div>
                     <div class="input-group mb-3">
@@ -91,7 +92,7 @@ Ubicacion
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in list_users %}
+                    {% for row in puntos %}
                     <tr>
                         <td>{{row[1]}}</td>
                         <td>{{row[2]}}</td>
@@ -109,4 +110,8 @@ Ubicacion
         </div>
     </div>
 </div>
+<hr>
+{% if resultado_factible %}
+{% include 'calculo_ubicacion.html' %}
+{% endif %}
 {% endblock %}

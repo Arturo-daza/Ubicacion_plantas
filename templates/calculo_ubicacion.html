@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
-{% block body %}
-<div class="container" style="display: flex; flex-direction: column; text-align: center; align-items: center">
+{% block calculo %}
+
+<div class="container mt-4 mb-4 pb-4" style="display: flex; flex-direction: column; text-align: center; align-items: center; background-color:rgb(227, 235, 174)">
     <div class="row">
-        <h3>Calculo de ubicacion por diferentes metodos</h3>
+        <h3 style="font-weight: bold;">Calculo de ubicacion por diferentes metodos</h3>
     </div>
     <div>
         <table id="example" class="table table-striped table-bordered" style="width:100%">
@@ -61,7 +61,7 @@
           </table>
 
     </div>
-    <h3>Mapa interactivo de calor</h3>
+    <h3 style="font-weight: bold;">Mapa interactivo de calor</h3>
 
     {{ iframe|safe }}
 
