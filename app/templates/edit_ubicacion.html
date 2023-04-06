@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-4 offset-md-4">
       <div class="card card-body">
-        <form action="/u_update/{{ubicacion.id}}" method="POST">
+        <form action="/update_u/{{ubicacion.id}}" method="POST">
           <div class="form-group">
             <label for="cliente">Cliente</label>
             <input type="text" name="cliente" value="{{ubicacion.cliente}}" class="form-control">
@@ -18,11 +18,11 @@
           </div>
 
           <div class="form-group">
-            <label for="distribucion">Carga</label>
+            <label for="carga">Carga</label>
             <input type="number" name="carga" value="{{ubicacion.carga}}" class="form-control">
           </div>
           <div class="form-group">
-            <label for="distribucion">costo </label>
+            <label for="costo">costo </label>
             <input type="number" name="costo" value="{{ubicacion.costo}}" class="form-control">
           </div>
           <div class="form-group">

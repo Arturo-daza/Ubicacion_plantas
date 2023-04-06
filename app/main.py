@@ -64,7 +64,7 @@ def consulta () :
 def get_id(id):
     con = conexion(DB_NAME=DB_NAME, DB_USER=DB_USER, DB_PASS=DB_PASS, DB_HOST=DB_HOST)
     cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cursor.execute('SELECT * FROM ubicacion WHERE id = %s', (id))
+    cursor.execute('SELECT * FROM ubicacion WHERE id = %s', (id,))
     data = cursor.fetchall()
     cierre_conexion(con) 
     return data 
