@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 import folium
 import statistics
-from math import radians, sin, cos, sqrt, atan2
 from folium.plugins import HeatMap
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
+from math import radians, sin, cos, sqrt, atan2
 
 
 
@@ -48,7 +48,7 @@ def distancia_euclideana(data):
     return resultado, data
 
 def get_address_from_coordinates(longitude, latitude):
-    geolocator = Nominatim(user_agent='ccmexico')
+    geolocator = Nominatim(user_agent='my_app', timeout=10)
     location = geolocator.reverse(f"{latitude}, {longitude}")
     return location.address
 
@@ -72,19 +72,24 @@ def mapear (longs, lats, data, factible, optimo):
                     blur=50, 
                     max_zoom=1)
 
-    #Creamos el marcador de Centro de Gravedad
-    tooltip = 'Metodo distancia factible'
-    folium.Marker([factible['X'], factible['Y']], popup="Punto factible", tooltip = tooltip).add_to(mapa)
+    #Creamos el marcador punto factible
+    tooltip = 'Punto factible'
+    folium.Marker(
+        [factible['X'], factible['Y']], 
+        popup="Punto factible", 
+        tooltip = tooltip, 
+        icon=folium.Icon(color="red", icon="info-sign")
+    ).add_to(mapa)
     
     #Creamos el marcador de Centro de Gravedad
-    tooltip = 'Metodo distancia optimo'
-    folium.Marker([optimo['X'], optimo['Y']], popup="Punto optimo", tooltip = tooltip).add_to(mapa)
+    tooltip = 'Punto optimo'
+    folium.Marker([optimo['X'], optimo['Y']], popup="Punto optimo", tooltip = tooltip, icon=folium.Icon(color="red", icon="info-sign")).add_to(mapa)
     
     # Agregar una línea entre los puntos
     distancia_km = calcular_distancia(factible['X'], factible['Y'], optimo['X'], optimo['Y'])
     folium.PolyLine(
         locations=[[factible['X'], factible['Y']], [optimo['X'], optimo['Y']]],
-        color='blue',
+        color='gray',
         weight=5, 
         tooltip=f"Distancia: {distancia_km:.2f} km"
     ).add_to(mapa)
